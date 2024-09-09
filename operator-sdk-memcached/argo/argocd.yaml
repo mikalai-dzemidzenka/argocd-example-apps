@@ -1,0 +1,13 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: operator-sdk-memcached
+spec:
+  project: default
+  source:
+    path: operator-sdk-memcached/config/default
+    repoURL: 'https://github.com/mikalai-dzemidzenka/argocd-example-apps'
+    targetRevision: HEAD
+  destination:
+    namespace: default
+    server: 'https://kubernetes.default.svc'
