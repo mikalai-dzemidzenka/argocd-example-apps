@@ -37,8 +37,12 @@ var _ = Describe("controller", Ordered, func() {
 		By("installing the cert-manager")
 		Expect(utils.InstallCertManager()).To(Succeed())
 
+		By("removing manager namespace")
+		cmd := exec.Command("kubectl", "delete", "ns", namespace)
+		_, _ = utils.Run(cmd)
+
 		By("creating manager namespace")
-		cmd := exec.Command("kubectl", "create", "ns", namespace)
+		cmd = exec.Command("kubectl", "create", "ns", namespace)
 		_, _ = utils.Run(cmd)
 	})
 
@@ -48,10 +52,6 @@ var _ = Describe("controller", Ordered, func() {
 
 		By("uninstalling the cert-manager bundle")
 		utils.UninstallCertManager()
-
-		By("removing manager namespace")
-		cmd := exec.Command("kubectl", "delete", "ns", namespace)
-		_, _ = utils.Run(cmd)
 	})
 
 	Context("Operator", func() {
@@ -117,6 +117,17 @@ var _ = Describe("controller", Ordered, func() {
 			}
 			EventuallyWithOffset(1, verifyControllerUp, time.Minute, time.Second).Should(Succeed())
 
+			cmd = exec.Command("kubectl", "apply", "-f", "test/e2e/testdata/guestbook-ui-deployment.yaml")
+			_, err = utils.Run(cmd)
+			ExpectWithOffset(1, err).NotTo(HaveOccurred())
+
+			cmd = exec.Command("kubectl", "apply", "-f", "test/e2e/testdata/guestbook-ui-svc.yaml")
+			_, err = utils.Run(cmd)
+			ExpectWithOffset(1, err).NotTo(HaveOccurred())
+
+			cmd = exec.Command("kubectl", "apply", "-f", "test/e2e/testdata/memcached.yaml")
+			_, err = utils.Run(cmd)
+			ExpectWithOffset(1, err).NotTo(HaveOccurred())
 		})
 	})
 })

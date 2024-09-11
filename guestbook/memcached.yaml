@@ -1,0 +1,14 @@
+apiVersion: cache.example.com/v1alpha1
+kind: Memcached
+metadata:
+  annotations:
+    argocd.argoproj.io/hook: PreSync,Sync,PostSync
+    argocd.argoproj.io/hook-delete-policy: HookSucceeded
+  labels:
+    app.kubernetes.io/name: operator-sdk-memcached
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/instance: guestbook
+  name: memcached-sample
+  namespace: operator-sdk-memcached-system
+spec:
+  namespaceRef: guestbook
