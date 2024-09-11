@@ -67,7 +67,9 @@ kind: ReplicaSet
 metadata:
   name: frontend
   annotations:
+    argocd.argoproj.io/hook: Sync
     argocd.argoproj.io/sync-wave: "2"
+    argocd.argoproj.io/hook-delete-policy: HookSucceeded
 spec:
   replicas: 1
   selector:
@@ -87,7 +89,9 @@ kind: Service
 metadata:
   name: frontend
   annotations:
+    argocd.argoproj.io/hook: Sync
     argocd.argoproj.io/sync-wave: "2"
+    argocd.argoproj.io/hook-delete-policy: HookSucceeded
 spec:
   selector:
     tier: frontend
